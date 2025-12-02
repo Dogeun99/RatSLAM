@@ -31,3 +31,10 @@ index df9abd1f7e855315a3e3e3b47d3efca59ad359ce..a693a0fd030768c9e6552146db5c2ca9
  
 EOF
 )
+
+<h3>ROS launch 파일 안내</h3>
+<ul>
+<li><code>launch/*.launch</code> 파일은 ROS 1 (예: Noetic) 환경에서 사용되는 XML 기반 런치입니다. 기존 워크플로를 유지하거나 ROS 1을 계속 사용할 때 필요합니다.</li>
+<li><code>launch/*.launch.py</code> 파일은 ROS 2 (예: Foxy 이후)에서 사용하는 Python 기반 런치입니다. ROS 2로 마이그레이션할 때 이 파일들을 사용하면 됩니다.</li>
+<li>양쪽 런치 파일을 모두 보관해 두면 ROS 1/ROS 2 환경을 병행 지원할 수 있습니다. 필요에 따라 해당 ROS 버전에 맞는 런치 파일만 선택적으로 사용하거나 별도 브랜치에서 정리할 수 있습니다.</li>
+</ul>
