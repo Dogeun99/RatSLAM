@@ -38,3 +38,40 @@ EOF
 <li><code>launch/*.launch.py</code> 파일은 ROS 2 (예: Foxy 이후)에서 사용하는 Python 기반 런치입니다. ROS 2로 마이그레이션할 때 이 파일들을 사용하면 됩니다.</li>
 <li>양쪽 런치 파일을 모두 보관해 두면 ROS 1/ROS 2 환경을 병행 지원할 수 있습니다. 필요에 따라 해당 ROS 버전에 맞는 런치 파일만 선택적으로 사용하거나 별도 브랜치에서 정리할 수 있습니다.</li>
 </ul>
+
+
+## ROS 2 파라미터 파일과 런치 예시
+
+ROS 2에서는 파라미터 파일의 루트에 노드명을 명시하고, `ros__parameters` 블록 아래로 개별 파라미터를 배치해야 합니다. 예를 들어 `config/ratslam_params.yaml`에서는 다음과 같이 `ratslam_node`를 루트 키로 두어 ROS 2 런처가 파일을 바로 읽을 수 있게 했습니다.
+
+```
+ratslam_node:
+  ros__parameters:
+    param1: value
+```
+
+새로운 ROS 2 런치 파일인 `launch/ratslam.launch.py`는 `pathlib.Path`를 사용해 파라미터 파일을 읽도록 구성되어 있습니다.
+
+```python
+from pathlib import Path
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+
+def generate_launch_description() -> LaunchDescription:
+    params_file = Path(__file__).parents[1] / "config" / "ratslam_params.yaml"
+
+    return LaunchDescription(
+        [
+            Node(
+                package="ratslam_ros",
+                executable="ratslam_node",
+                name="ratslam_node",
+                parameters=[params_file],
+                output="screen",
+            )
+        ]
+    )
+```
+
+동적 리컨피그를 사용하던 ROS 1 패턴이 필요할 경우, ROS 2에서는 `rclcpp::ParameterEventHandler` 혹은 `on_parameter_event` 구독을 통해 파라미터 변경 사항을 처리할 수 있습니다.
