@@ -1,0 +1,3 @@
+# Ignore rosbag2 sqlite database
+*.db3
+*.DB3
